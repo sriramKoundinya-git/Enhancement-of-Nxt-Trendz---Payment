@@ -48,7 +48,6 @@ class ProductItemDetails extends Component {
     this.setState({
       apiStatus: apiStatusConstants.inProgress,
     })
-
     const jwtToken = Cookies.get('jwt_token')
     const apiUrl = `https://apis.ccbp.in/products/${id}`
     const options = {
@@ -77,31 +76,37 @@ class ProductItemDetails extends Component {
     }
   }
 
-  // Loader view (from image 2)
   renderLoadingView = () => (
+    // eslint-disable-next-line react/no-unknown-property
     <div className="products-details-loader-container" data-testid="loader">
       <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     </div>
   )
 
-  // Failure view (from image 3)
-  renderFailureView = () => (
-    <div className="product-details-failure-view-container">
-      <img
-        alt="failure view"
-        src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-error-view-img.png"
-        className="failure-view-image"
-      />
-      <h1 className="product-not-found-heading">Product Not Found</h1>
-      <Link to="/products">
-        <button type="button" className="button">
-          Continue Shopping
-        </button>
-      </Link>
-    </div>
-  )
+  renderFailureView = () => {
+    const {history} = this.props
 
-  // Decrement product quantity (from image 3)
+    return (
+      <div className="product-details-failure-view-container">
+        <img
+          alt="failure view"
+          src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-error-view-img.png"
+          className="failure-view-image"
+        />
+        <h1 className="product-not-found-heading">Product Not Found</h1>
+        <Link to="/products">
+          <button
+            type="button"
+            className="button"
+            onClick={() => history.push('/products')}
+          >
+            Continue Shopping
+          </button>
+        </Link>
+      </div>
+    )
+  }
+
   onDecrementQuantity = () => {
     const {quantity} = this.state
     if (quantity > 1) {
@@ -109,12 +114,10 @@ class ProductItemDetails extends Component {
     }
   }
 
-  // Increment product quantity (from image 3)
   onIncrementQuantity = () => {
     this.setState(prevState => ({quantity: prevState.quantity + 1}))
   }
 
-  // Product details render (from image 4)
   renderProductDetailsView = () => {
     const {productData, quantity, similarProductsData} = this.state
     const {
@@ -166,8 +169,6 @@ class ProductItemDetails extends Component {
                 <BsDashSquare className="quantity-controller-icon" />
               </button>
               <p className="quantity">{quantity}</p>
-              // Continue from the previous quantity controls in
-              renderProductDetailsView
               <button
                 type="button"
                 className="quantity-controller-button"
@@ -182,13 +183,12 @@ class ProductItemDetails extends Component {
             </button>
           </div>
         </div>
-
         <h1 className="similar-products-heading">Similar Products</h1>
         <ul className="similar-products-list">
           {similarProductsData.map(eachSimilarProduct => (
             <SimilarProductItem
+              key={eachSimilarProduct.id} // Add this line
               productDetails={eachSimilarProduct}
-              key={eachSimilarProduct.id}
             />
           ))}
         </ul>
@@ -196,9 +196,9 @@ class ProductItemDetails extends Component {
     )
   }
 
-  // Renders main product-view based on API status
   renderProductDetails = () => {
     const {apiStatus} = this.state
+
     switch (apiStatus) {
       case apiStatusConstants.success:
         return this.renderProductDetailsView()
@@ -211,7 +211,6 @@ class ProductItemDetails extends Component {
     }
   }
 
-  // Main render method for the component
   render() {
     return (
       <>

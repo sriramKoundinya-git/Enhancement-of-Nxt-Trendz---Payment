@@ -15,7 +15,8 @@
   .all-products-container {
     margin-left: 30px;
     width: 70%;
-    .all-products-section {
+  }
+  .all-products-section {
       display: flex;
       flex-direction: column;
     }
@@ -36,7 +37,7 @@
       padding-left: 0;
     }
   }
-}
+
 
 .products-heading {
   color: #475569;
