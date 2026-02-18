@@ -25,6 +25,7 @@ class LoginForm extends Component {
 
     Cookies.set('jwt_token', jwtToken, {
       expires: 30,
+      path: '/',
     })
     history.replace('/')
   }
@@ -51,9 +52,18 @@ class LoginForm extends Component {
     }
   }
 
+  onGuestLogin = () => {
+    const {history} = this.props
+    Cookies.set('jwt_token', 'guest_token', {
+      expires: 1, // 1 day
+      path: '/',
+    })
+
+    history.replace('/')
+  }
+
   renderPasswordField = () => {
     const {password} = this.state
-
     return (
       <>
         <label className="input-label" htmlFor="password">
@@ -65,7 +75,6 @@ class LoginForm extends Component {
           className="password-input-field"
           value={password}
           onChange={this.onChangePassword}
-          placeholder="Password"
         />
       </>
     )
@@ -73,7 +82,6 @@ class LoginForm extends Component {
 
   renderUsernameField = () => {
     const {username} = this.state
-
     return (
       <>
         <label className="input-label" htmlFor="username">
@@ -85,7 +93,6 @@ class LoginForm extends Component {
           className="username-input-field"
           value={username}
           onChange={this.onChangeUsername}
-          placeholder="Username"
         />
       </>
     )
@@ -94,27 +101,25 @@ class LoginForm extends Component {
   render() {
     const {showSubmitError, errorMsg} = this.state
     const jwtToken = Cookies.get('jwt_token')
-
     if (jwtToken !== undefined) {
       return <Redirect to="/" />
     }
-
     return (
       <div className="login-form-container">
         <img
           src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png"
-          className="login-website-logo-mobile-img"
+          className="login-website-logo-mobile-image"
           alt="website logo"
         />
         <img
           src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-login-img.png"
-          className="login-img"
+          className="login-image"
           alt="website login"
         />
         <form className="form-container" onSubmit={this.submitForm}>
           <img
             src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png"
-            className="login-website-logo-desktop-img"
+            className="login-website-logo-desktop-image"
             alt="website logo"
           />
           <div className="input-container">{this.renderUsernameField()}</div>
@@ -122,10 +127,19 @@ class LoginForm extends Component {
           <button type="submit" className="login-button">
             Login
           </button>
+          <p>OR</p>
+          <button
+            type="button"
+            className="guest-login-button"
+            onClick={this.onGuestLogin}
+          >
+            Continue as Guest
+          </button>
           {showSubmitError && <p className="error-message">*{errorMsg}</p>}
         </form>
       </div>
     )
   }
 }
+
 export default LoginForm
